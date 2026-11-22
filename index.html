@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metrika Estatística | Consultoria em Análise de Dados e Business Intelligence</title>
+    <meta name="description" content="Consultoria especializada em análise de dados, Power BI, estatística aplicada e ciência de dados. Transformamos informação em evidência para decisão.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        metrika: {
+                            navy: '#0A192F',
+                            slate: '#1E293B',
+                            gold: '#D4A843',
+                            goldLight: '#F3E5AB',
+                            sky: '#F0F7FF',
+                            ice: '#F8FAFC',
+                            accent: '#0284C7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-pattern {
+            background-color: #F8FAFC;
+            background-image: radial-gradient(#CBD5E1 0.85px, transparent 0.85px), radial-gradient(#CBD5E1 0.85px, #F8FAFC 0.85px);
+            background-size: 34px 34px;
+            background-position: 0 0, 17px 17px;
+        }
+        /* Animação suave do Dropdown do Portfólio */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .dropdown-group:hover .dropdown-menu,
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        /* Container Responsivo do Iframe dentro do Modal */
+        .modal-iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 76vh;
+            min-height: 460px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .modal-iframe-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body class="bg-metrika-ice text-slate-700 antialiased selection:bg-metrika-gold selection:text-metrika-navy">
+
+    <!-- NAVBAR FIXA COM MENU SUSPENSO (DROPDOWN) NO PORTFÓLIO -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo / Brasão -->
+                <a href="#inicio" class="flex items-center gap-3.5 group">
+                    <div class="w-14 h-12 rounded-lg overflow-hidden bg-metrika-navy flex items-center justify-center shadow-sm border border-metrika-gold/40 group-hover:scale-105 transition-transform">
+                        <img src="assets/logo-metrika.png" alt="Brasão Metrika Estatística" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <span class="font-heading font-extrabold text-xl tracking-tight text-metrika-navy block leading-none">METRIKA</span>
+                        <span class="text-[11px] font-semibold tracking-[0.22em] text-amber-600 uppercase mt-1 block">Estatística &amp; Dados</span>
+                    </div>
+                </a>
+
+                <!-- Menu Desktop -->
+                <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+                    <a href="#inicio" class="hover:text-metrika-navy transition-colors">Início</a>
+                    <a href="#quem-somos" class="hover:text-metrika-navy transition-colors">Quem Somos</a>
+                    <a href="#servicos" class="hover:text-metrika-navy transition-colors">Nossos Serviços</a>
+                    <a href="#lideranca" class="hover:text-metrika-navy transition-colors">Liderança</a>
+
+                    <!-- BOTÃO PORTFÓLIO COM LISTA SUSPENSA (DROPDOWN) -->
+                    <div class="relative dropdown-group">
+                        <button type="button" id="desktop-portfolio-btn" onclick="toggleDesktopDropdown()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-50 text-metrika-navy font-semibold border border-sky-200/80 hover:bg-sky-100 transition-all">
+                            <i class="fas fa-chart-pie text-sky-600"></i>
+                            <span>Portfólio BI</span>
+                            <i class="fas fa-chevron-down text-xs text-slate-500 transition-transform duration-200" id="desktop-chevron"></i>
+                        </button>
+
+                        <!-- Lista Suspensa das Áreas -->
+                        <div id="desktop-portfolio-menu" class="dropdown-menu absolute right-0 mt-2.5 w-80 bg-white rounded-2xl shadow-xl border border-slate-200/90 py-3 z-50">
+                            <div class="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Selecione a Área</span>
+                                <span class="text-[10px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full">Dashboards</span>
+                            </div>
+
+                            <div class="p-1.5 space-y-1">
+                                <!-- Item 1: Vendas (Ativo - Abre o Power BI) -->
+                                <button type="button" onclick="abrirPortfolioModal('vendas')" class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-sky-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm group-hover:scale-105 transition-transform">
+                                            <i class="fas fa-chart-line"></i>
+                                        </span>
+                                        <div>
+                                            <span class="block text-sm font-bold text-metrika-navy">Vendas &amp; DRE</span>
+                                            <span class="block text-[11px] text-slate-500">Painel interativo Power BI</span>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Ativo</span>
+                                </button>
+
+                                <!-- Item 2: Finanças -->
+                                <button type="button" onclick="abrirPortfolioModal('financas')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-coins"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Finanças &amp; Fluxo de Caixa</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+
+                                <!-- Item 3: Estoque -->
+                                <button type="button" onclick="abrirPortfolioModal('estoque')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-boxes-stacked"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Estoque &amp; Logística</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+
+                                <!-- Item 4: Educação -->
+                                <button type="button" onclick="abrirPortfolioModal('educacao')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Educação &amp; Desempenho</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+
+                                <!-- Item 5: Esporte -->
+                                <button type="button" onclick="abrirPortfolioModal('esporte')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-futbol"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Esporte &amp; Scout</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+
+                                <!-- Item 6: Agricultura -->
+                                <button type="button" onclick="abrirPortfolioModal('agricultura')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-seedling"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Agricultura &amp; Safra</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+
+                                <!-- Item 7: Segurança & Gestão Pública -->
+                                <button type="button" onclick="abrirPortfolioModal('gestao-publica')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                    <div class="flex items-center gap-3">
+                                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-sm">
+                                            <i class="fas fa-landmark"></i>
+                                        </span>
+                                        <span class="text-sm font-medium text-slate-700">Gestão &amp; Políticas Públicas</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">Em construção</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#contato" class="px-5 py-2.5 rounded-full bg-metrika-navy text-white font-semibold hover:bg-slate-800 transition-all shadow-sm flex items-center gap-2">
+                        <i class="fab fa-whatsapp text-emerald-400 text-base"></i> Fale Conosco
+                    </a>
+                </nav>
+
+                <!-- Botão Menu Mobile -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="Abrir menu">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown (Com sublista do Portfólio) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-5 space-y-1.5 shadow-lg max-h-[85vh] overflow-y-auto">
+            <a href="#inicio" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50">Início</a>
+            <a href="#quem-somos" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50">Quem Somos</a>
+            <a href="#servicos" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50">Nossos Serviços</a>
+            <a href="#lideranca" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50">Liderança Técnica</a>
+            
+            <!-- Submenu Portfólio Mobile -->
+            <div class="pt-1 pb-1">
+                <button type="button" onclick="toggleMobilePortfolio()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-base font-semibold bg-sky-50 text-metrika-navy">
+                    <span class="flex items-center gap-2"><i class="fas fa-chart-pie text-sky-600"></i> Portfólio BI (Áreas)</span>
+                    <i id="mobile-port-chevron" class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div id="mobile-portfolio-list" class="mt-1.5 pl-3 space-y-1 border-l-2 border-sky-200 ml-3">
+                    <button type="button" onclick="abrirPortfolioModal('vendas')" class="w-full text-left px-3 py-2 rounded-lg text-sm font-bold text-metrika-navy bg-emerald-50/70 flex items-center justify-between">
+                        <span><i class="fas fa-chart-line text-emerald-600 mr-2"></i>Vendas &amp; DRE</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Ativo</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('financas')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-coins text-slate-400 mr-2"></i>Finanças</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('estoque')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-boxes-stacked text-slate-400 mr-2"></i>Estoque</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('educacao')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-graduation-cap text-slate-400 mr-2"></i>Educação</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('esporte')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-futbol text-slate-400 mr-2"></i>Esporte</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('agricultura')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-seedling text-slate-400 mr-2"></i>Agricultura</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                    <button type="button" onclick="abrirPortfolioModal('gestao-publica')" class="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-600 flex items-center justify-between">
+                        <span><i class="fas fa-landmark text-slate-400 mr-2"></i>Gestão Pública</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Em construção</span>
+                    </button>
+                </div>
+            </div>
+
+            <a href="#contato" class="block px-3 py-2.5 mt-2 rounded-lg text-center font-semibold bg-metrika-navy text-white">Contatos</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="hero-pattern pt-32 pb-20 lg:pt-40 lg:pb-28 border-b border-slate-200/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Texto Principal -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-100/80 border border-sky-200 text-sky-900 text-xs font-semibold tracking-wide uppercase">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                        Consultoria Estatística &amp; Inteligência de Dados
+                    </div>
+                    
+                    <h1 class="font-heading text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-metrika-navy leading-[1.15]">
+                        Transformamos dados complexos em <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-metrika-navy">evidências para decisões</span> seguras.
+                    </h1>
+                    
+                    <p class="text-lg text-slate-600 leading-relaxed max-w-2xl">
+                        Estruturamos, analisamos e interpretamos seus dados com rigor metodológico, dashboards interativos em Power BI e modelagem estatística sob medida para empresas, setor público e pesquisas acadêmicas.
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <button type="button" onclick="abrirPortfolioModal('vendas')" class="px-7 py-3.5 rounded-xl bg-metrika-navy text-white font-semibold hover:bg-slate-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2.5">
+                            <i class="fas fa-chart-pie text-metrika-gold"></i> Ver Dashboard Vendas &amp; DRE
+                        </button>
+                        <a href="https://wa.me/5571920051287?text=Ol%C3%A1!%20Gostaria%20de%20conhecer%20mais%20sobre%20os%20servi%C3%A7os%20da%20Metrika%20Estat%C3%ADstica." target="_blank" rel="noopener" class="px-7 py-3.5 rounded-xl bg-white text-metrika-navy font-semibold border border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all shadow-sm flex items-center gap-2.5">
+                            <i class="fab fa-whatsapp text-emerald-600 text-lg"></i> Solicitar Diagnóstico
+                        </a>
+                    </div>
+
+                    <!-- Selos de Credibilidade -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 max-w-xl">
+                        <div>
+                            <p class="font-heading font-bold text-xl text-metrika-navy">CONRE Ativo</p>
+                            <p class="text-xs text-slate-500">Rigor Ético e Técnico</p>
+                        </div>
+                        <div>
+                            <p class="font-heading font-bold text-xl text-metrika-navy">100% Sob Medida</p>
+                            <p class="text-xs text-slate-500">Análises Reprodutíveis</p>
+                        </div>
+                        <div>
+                            <p class="font-heading font-bold text-xl text-metrika-navy">Ciclo Completo</p>
+                            <p class="text-xs text-slate-500">Do Dado ao Dashboard</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Destaque com Brasão -->
+                <div class="lg:col-span-5">
+                    <div class="relative mx-auto max-w-md">
+                        <div class="absolute -inset-3 bg-gradient-to-tr from-sky-200/60 via-amber-100/60 to-sky-100/60 rounded-3xl blur-xl"></div>
+                        <div class="relative bg-metrika-navy rounded-2xl p-6 sm:p-8 shadow-xl border border-metrika-gold/30 text-center">
+                            <img src="assets/logo-metrika.png" alt="Brasão Oficial Metrika Estatística - Análise de Dados" class="w-full h-auto rounded-xl mx-auto shadow-md mb-6">
+                            <div class="flex items-center justify-center gap-2 text-amber-300 text-xs font-semibold tracking-widest uppercase">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Precisão • Clareza • Estratégia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO: QUEM SOMOS -->
+    <section id="quem-somos" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-6 space-y-5">
+                    <span class="text-xs font-bold tracking-widest uppercase text-sky-600">Sobre a Consultoria</span>
+                    <h2 class="font-heading text-3xl sm:text-4xl font-bold text-metrika-navy">Quem Somos</h2>
+                    <div class="w-16 h-1 bg-metrika-gold rounded-full"></div>
+                    
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        A <strong>Metrika Estatística</strong> é uma consultoria especializada em análise de dados, formada por estatístico com experiência profissional, atuação ética e rigor técnico. Nosso propósito é compreender o seu desafio, identificar a abordagem analítica mais adequada e construir, junto com você, a solução que direciona as melhores decisões.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed text-base">
+                        Acompanhamos todo o ciclo analítico, do diagnóstico e planejamento amostral à modelagem avançada de dados. Dominamos desde a estatística descritiva e inferencial até técnicas complexas, como séries temporais e modelos lineares mistos, sempre aplicadas ao contexto do seu problema.
+                    </p>
+                    <div class="p-5 rounded-xl bg-sky-50/80 border-l-4 border-metrika-navy text-metrika-navy font-medium text-sm sm:text-base">
+                        "Não entregamos apenas números: entregamos clareza, segurança metodológica e recomendações assertivas, para que cada decisão seja baseada em evidências."
+                    </div>
+                </div>
+
+                <!-- Pilares do Ciclo Analítico -->
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="p-6 rounded-2xl bg-metrika-ice border border-slate-200/80 hover:border-sky-300 transition-all shadow-sm">
+                        <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-lg mb-4">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-metrika-navy text-lg mb-2">Diagnóstico e Amostragem</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Planejamento amostral rigoroso e estruturação de bases de dados para garantir representatividade e confiabilidade.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-metrika-ice border border-slate-200/80 hover:border-sky-300 transition-all shadow-sm">
+                        <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg mb-4">
+                            <i class="fas fa-square-root-variable"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-metrika-navy text-lg mb-2">Estatística Avançada</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Análise descritiva, inferencial, séries temporais e modelos lineares mistos ajustados à realidade do problema.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-metrika-ice border border-slate-200/80 hover:border-sky-300 transition-all shadow-sm">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg mb-4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-metrika-navy text-lg mb-2">Dashboards &amp; BI</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Painéis executivos interativos em Power BI e automações inteligentes para acompanhamento contínuo de indicadores.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-metrika-ice border border-slate-200/80 hover:border-sky-300 transition-all shadow-sm">
+                        <div class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-lg mb-4">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-metrika-navy text-lg mb-2">Decisão Baseada em Evidência</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Relatórios técnicos claros, reprodutíveis e traduzidos para a linguagem estratégica do gestor ou pesquisador.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO: NOSSOS SERVIÇOS -->
+    <section id="servicos" class="py-20 bg-gradient-to-b from-sky-50/70 to-white border-y border-slate-200/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto text-center space-y-4 mb-14">
+                <span class="text-xs font-bold tracking-widest uppercase text-sky-600">Soluções Analíticas</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-metrika-navy">Nossos Serviços</h2>
+                <div class="w-16 h-1 bg-metrika-gold rounded-full mx-auto"></div>
+                <p class="text-slate-600 text-base sm:text-lg leading-relaxed pt-2">
+                    Estruturamos, analisamos e interpretamos seus dados com método e rigor estatístico, transformando informação em evidência para decisão. Seja para escalar seu negócio, avaliar políticas públicas ou concluir uma pesquisa acadêmica com solidez metodológica, entregamos análises claras, reprodutíveis e sob medida para o seu desafio.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/90 hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-metrika-navy mb-3">Inteligência Empresarial &amp; BI</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                            Otimize margens, reduza custos operacionais e acompanhe vendas em tempo real com painéis gerenciais e previsões de demanda.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-sky-600 mt-0.5"></i><span>Dashboards executivos em Power BI (DRE, Vendas, Estoque)</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-sky-600 mt-0.5"></i><span>Automação de planilhas e indicadores em Excel</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-sky-600 mt-0.5"></i><span>Previsão de faturamento com Séries Temporais</span></li>
+                        </ul>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-100">
+                        <a href="#contato" class="text-sm font-semibold text-sky-700 hover:text-metrika-navy inline-flex items-center gap-1.5">
+                            Solicitar proposta empresarial <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/90 hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-landmark"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-metrika-navy mb-3">Políticas Públicas &amp; Indicadores</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                            Diagnósticos territoriais, monitoramento de metas e avaliação de impacto para órgãos públicos e instituições do terceiro setor.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-amber-600 mt-0.5"></i><span>Construção e validação de indicadores de desempenho</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-amber-600 mt-0.5"></i><span>Pesquisas amostrais e levantamentos socioeconômicos</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-amber-600 mt-0.5"></i><span>Relatórios técnicos e boletins estatísticos</span></li>
+                        </ul>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-100">
+                        <a href="#contato" class="text-sm font-semibold text-amber-700 hover:text-metrika-navy inline-flex items-center gap-1.5">
+                            Consultar assessoria técnica <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/90 hover:shadow-md hover:-translate-y-1 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-6">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="font-heading text-xl font-bold text-metrika-navy mb-3">Assessoria Estatística Acadêmica</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-5">
+                            Suporte metodológico completo para artigos científicos, dissertações de mestrado e teses de doutorado com total reprodutibilidade.
+                        </p>
+                        <ul class="space-y-2.5 text-sm text-slate-600">
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-emerald-600 mt-0.5"></i><span>Cálculo amostral e delineamento experimental</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-emerald-600 mt-0.5"></i><span>Testes de hipóteses, regressão e modelos lineares mistos</span></li>
+                            <li class="flex items-start gap-2.5"><i class="fas fa-check-circle text-emerald-600 mt-0.5"></i><span>Interpretação detalhada dos resultados para defesa</span></li>
+                        </ul>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-slate-100">
+                        <a href="#contato" class="text-sm font-semibold text-emerald-700 hover:text-metrika-navy inline-flex items-center gap-1.5">
+                            Agendar orientação metodológica <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO: NOSSA LIDERANÇA TÉCNICA E ESTRATÉGICA -->
+    <section id="lideranca" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-br from-slate-50 via-sky-50/50 to-white rounded-3xl p-8 sm:p-12 border border-slate-200/90 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <!-- Coluna da Foto -->
+                    <div class="lg:col-span-5 flex flex-col items-center">
+                        <div class="relative w-64 h-72 sm:w-72 sm:h-80 rounded-2xl overflow-hidden shadow-lg border-4 border-white ring-1 ring-slate-200">
+                            <img src="assets/lideranca-tecnica.png" alt="Liderança Técnica e Estratégica - Metrika Estatística" class="w-full h-full object-cover object-top">
+                        </div>
+                        <div class="mt-4 flex flex-wrap justify-center gap-2">
+                            <span class="px-3 py-1 rounded-full bg-metrika-navy text-white text-xs font-semibold">Estatístico • CONRE Ativo</span>
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold">Ciência de Dados</span>
+                            <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-900 text-xs font-semibold">Matemática</span>
+                        </div>
+                    </div>
+
+                    <!-- Coluna do Texto Oficial -->
+                    <div class="lg:col-span-7 space-y-5">
+                        <div class="inline-flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-amber-600">
+                            <i class="fas fa-award"></i>
+                            <span>Diretoria Técnica &amp; Estatística</span>
+                        </div>
+                        
+                        <h2 class="font-heading text-2xl sm:text-3xl font-bold text-metrika-navy leading-tight">
+                            <strong>Antônio Carlos</strong>
+                        </h2>
+                        <p class="text-sm font-bold text-sky-700 tracking-wide uppercase -mt-3">Diretor Técnico &amp; Estatístico</p>
+                        <div class="w-14 h-1 bg-metrika-gold rounded-full"></div>
+                        
+                        <p class="text-slate-600 leading-relaxed text-base">
+                            À frente das análises da Metrika está um profissional com formação sólida e complementar: <strong>Bacharel em Estatística, com registro ativo no CONRE, Licenciatura em Matemática e formação em Ciência de Dados</strong>, além de atuação em pesquisas acadêmicas nas áreas educacional e de negócios.
+                        </p>
+                        
+                        <p class="text-slate-600 leading-relaxed text-base">
+                            Essa combinação une rigor metodológico, fundamentação estatística e visão estratégica para transformar dados em decisões confiáveis. O resultado são diagnósticos precisos, modelos bem validados e soluções assertivas para problemas complexos, com impacto real e mensurável nos resultados das organizações.
+                        </p>
+
+                        <div class="pt-2 flex flex-wrap gap-3">
+                            <div class="flex items-center gap-2 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200">
+                                <i class="fas fa-check text-emerald-600"></i> Rigor Metodológico
+                            </div>
+                            <div class="flex items-center gap-2 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200">
+                                <i class="fas fa-check text-emerald-600"></i> Modelos Validados
+                            </div>
+                            <div class="flex items-center gap-2 text-xs font-medium text-slate-600 bg-white px-3.5 py-2 rounded-lg border border-slate-200">
+                                <i class="fas fa-check text-emerald-600"></i> Impacto Mensurável
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO: NOSSOS CONTATOS -->
+    <section id="contato" class="py-20 bg-metrika-ice border-t border-slate-200/80">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14 space-y-3">
+                <span class="text-xs font-bold tracking-widest uppercase text-sky-600">Atendimento Direto</span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-bold text-metrika-navy">Nossos Contatos</h2>
+                <div class="w-16 h-1 bg-metrika-gold rounded-full mx-auto"></div>
+                <p class="text-slate-600 text-base pt-1">
+                    Pronto para transformar os dados da sua empresa ou pesquisa em decisões seguras? Escolha o canal de sua preferência e fale diretamente conosco.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card WhatsApp -->
+                <a href="https://wa.me/5571920051287?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Metrika%20Estat%C3%ADstica%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener" class="group p-8 rounded-2xl bg-gradient-to-br from-emerald-50/90 to-white border border-emerald-200/80 hover:border-emerald-500 hover:shadow-lg transition-all text-center flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-3xl shadow-md group-hover:scale-110 transition-transform mb-5">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Telefone / WhatsApp</span>
+                    <h3 class="font-heading text-xl font-bold text-metrika-navy mb-2">(71) 9 2005-1287</h3>
+                    <p class="text-xs text-slate-500 mb-4">Atendimento ágil para orçamentos e dúvidas</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 group-hover:underline">
+                        Iniciar conversa <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                    </span>
+                </a>
+
+                <!-- Card E-mail -->
+                <a href="mailto:metrikaestatistica@gmail.com?subject=Contato%20-%20Consultoria%20Metrika%20Estat%C3%ADstica" class="group p-8 rounded-2xl bg-gradient-to-br from-sky-50/90 to-white border border-sky-200/80 hover:border-sky-500 hover:shadow-lg transition-all text-center flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-sky-600 text-white flex items-center justify-center text-3xl shadow-md group-hover:scale-110 transition-transform mb-5">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-sky-700 mb-1">E-mail Corporativo</span>
+                    <h3 class="font-heading text-lg font-bold text-metrika-navy mb-2 break-all">metrikaestatistica@gmail.com</h3>
+                    <p class="text-xs text-slate-500 mb-4">Envie escopos, bases ou solicitações formais</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-sky-700 group-hover:underline">
+                        Enviar e-mail <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                    </span>
+                </a>
+
+                <!-- Card Instagram -->
+                <a href="https://instagram.com/metrikaestatistica" target="_blank" rel="noopener" class="group p-8 rounded-2xl bg-gradient-to-br from-amber-50/80 via-rose-50/40 to-white border border-amber-200/80 hover:border-amber-500 hover:shadow-lg transition-all text-center flex flex-col items-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 text-white flex items-center justify-center text-3xl shadow-md group-hover:scale-110 transition-transform mb-5">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-1">Instagram Oficial</span>
+                    <h3 class="font-heading text-xl font-bold text-metrika-navy mb-2">@metrikaestatistica</h3>
+                    <p class="text-xs text-slate-500 mb-4">Dicas de dados, BI e novos estudos de caso</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 group-hover:underline">
+                        Seguir perfil <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-metrika-navy text-slate-300 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-4">
+                    <img src="assets/logo-metrika.png" alt="Metrika Estatística" class="w-14 h-12 rounded-lg object-cover border border-metrika-gold/40">
+                    <div>
+                        <p class="font-heading font-bold text-white text-lg">Metrika Estatística</p>
+                        <p class="text-xs text-slate-400">Análise de Dados, Estatística Aplicada &amp; Business Intelligence</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-5 text-lg">
+                    <a href="https://wa.me/5571920051287" target="_blank" rel="noopener" aria-label="WhatsApp" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="mailto:metrikaestatistica@gmail.com" aria-label="E-mail" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-sky-600 text-white flex items-center justify-center transition-colors">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://instagram.com/metrikaestatistica" target="_blank" rel="noopener" aria-label="Instagram" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-pink-600 text-white flex items-center justify-center transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+                <p>&copy; 2026 Metrika Estatística. Todos os direitos reservados.</p>
+                <p>Rigor Estatístico &amp; Decisões Baseadas em Evidências.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOTÃO FLUTUANTE WHATSAPP -->
+    <a href="https://wa.me/5571920051287?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20da%20Metrika%20Estat%C3%ADstica." target="_blank" rel="noopener" aria-label="Falar no WhatsApp" class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-xl flex items-center justify-center text-3xl hover:scale-110 transition-all">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ===================================================================== -->
+    <!-- MODAL INTERATIVO DO PORTFÓLIO (ABRE AO CLICAR NA LISTA DO PORTFÓLIO)  -->
+    <!-- ===================================================================== -->
+    <div id="portfolio-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/75 backdrop-blur-sm p-3 sm:p-6" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-6xl rounded-3xl shadow-2xl border border-slate-200 overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            
+            <!-- Cabeçalho do Modal -->
+            <div class="px-5 sm:px-8 py-4 bg-metrika-navy text-white flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon-box" class="w-10 h-10 rounded-xl bg-metrika-gold/20 text-metrika-gold flex items-center justify-center text-lg">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <span id="modal-badge" class="text-[10px] font-bold uppercase tracking-widest text-amber-300 block">Portfólio Oficial • Metrika Estatística</span>
+                        <h3 id="modal-title" class="font-heading text-lg sm:text-xl font-bold leading-tight">Dashboard Gerencial: Vendas &amp; DRE</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="fecharPortfolioModal()" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition-colors" aria-label="Fechar janela">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Barra Rápida de Troca de Área dentro do Modal -->
+            <div class="px-5 sm:px-8 py-2.5 bg-slate-100 border-b border-slate-200 flex items-center gap-2 overflow-x-auto text-xs">
+                <span class="font-semibold text-slate-500 shrink-0 mr-1">Áreas:</span>
+                <button type="button" onclick="abrirPortfolioModal('vendas')" data-area="vendas" class="modal-pill px-3 py-1.5 rounded-full font-semibold bg-metrika-navy text-white shrink-0">Vendas &amp; DRE</button>
+                <button type="button" onclick="abrirPortfolioModal('financas')" data-area="financas" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Finanças</button>
+                <button type="button" onclick="abrirPortfolioModal('estoque')" data-area="estoque" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Estoque</button>
+                <button type="button" onclick="abrirPortfolioModal('educacao')" data-area="educacao" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Educação</button>
+                <button type="button" onclick="abrirPortfolioModal('esporte')" data-area="esporte" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Esporte</button>
+                <button type="button" onclick="abrirPortfolioModal('agricultura')" data-area="agricultura" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Agricultura</button>
+                <button type="button" onclick="abrirPortfolioModal('gestao-publica')" data-area="gestao-publica" class="modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0">Gestão Pública</button>
+            </div>
+
+            <!-- Corpo do Modal -->
+            <div class="p-4 sm:p-6 bg-metrika-ice">
+                <!-- Conteúdo ATIVO: Vendas & DRE (Power BI) -->
+                <div id="modal-content-vendas">
+                    <p class="text-xs sm:text-sm text-slate-600 mb-3">
+                        Análise completa de faturamento por meio de pagamento (PIX, Crédito, Débito), deduções, CMV, despesas operacionais e Margem Líquida. Interaja diretamente nos gráficos abaixo:
+                    </p>
+                    <div class="modal-iframe-wrapper bg-white border border-slate-200 shadow-inner">
+                        <iframe id="powerbi-frame" title="Relatorio Power BI" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=435a4059-02a0-4ca2-b33a-43ee38f582ec&autoAuth=true&ctid=3ac21931-7a24-443a-a66d-4880f508af27" frameborder="0" allowFullScreen="true"></iframe>
+                    </div>
+                </div>
+
+                <!-- Conteúdo EM CONSTRUÇÃO para as demais áreas -->
+                <div id="modal-content-construcao" class="hidden py-12 sm:py-16 px-6 text-center bg-white rounded-2xl border border-slate-200">
+                    <div id="construcao-icon" class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl mx-auto mb-5">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <span class="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold uppercase tracking-wider mb-3">
+                        Projeto em Construção • Série Semanal
+                    </span>
+                    <h4 id="construcao-titulo" class="font-heading text-2xl font-bold text-metrika-navy mb-3">
+                        Dashboard de Finanças em Desenvolvimento
+                    </h4>
+                    <p id="construcao-desc" class="text-slate-600 max-w-xl mx-auto text-sm sm:text-base leading-relaxed mb-7">
+                        Estamos estruturando a modelagem estatística e os indicadores visuais deste painel para nossa série de lançamentos semanais de portfólio.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button type="button" onclick="abrirPortfolioModal('vendas')" class="px-5 py-2.5 rounded-xl bg-metrika-navy text-white text-sm font-semibold hover:bg-slate-800 transition-colors">
+                            <i class="fas fa-chart-line mr-1.5 text-metrika-gold"></i> Explorar Painel de Vendas &amp; DRE
+                        </button>
+                        <a href="https://instagram.com/metrikaestatistica" target="_blank" rel="noopener" class="px-5 py-2.5 rounded-xl bg-sky-50 text-sky-800 border border-sky-200 text-sm font-semibold hover:bg-sky-100 transition-colors">
+                            <i class="fab fa-instagram mr-1.5"></i> Acompanhar no Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE INTERATIVIDADE -->
+    <script>
+        // Menu Mobile Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Toggle Submenu Mobile Portfólio
+        function toggleMobilePortfolio() {
+            const list = document.getElementById('mobile-portfolio-list');
+            const chev = document.getElementById('mobile-port-chevron');
+            list.classList.toggle('hidden');
+            chev.classList.toggle('rotate-180');
+        }
+
+        // Toggle Dropdown Desktop Portfólio ao clicar
+        function toggleDesktopDropdown() {
+            const menu = document.getElementById('desktop-portfolio-menu');
+            menu.classList.toggle('show');
+        }
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', (e) => {
+            const btn = document.getElementById('desktop-portfolio-btn');
+            const menu = document.getElementById('desktop-portfolio-menu');
+            if (btn && menu && !btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // Dados descritivos das áreas em construção
+        const areasConfig = {
+            'vendas': {
+                titulo: 'Dashboard Gerencial: Análise de Vendas e DRE Empresarial',
+                badge: 'Publicado • Painel Interativo Power BI',
+                icone: 'fa-chart-line',
+                ativo: true
+            },
+            'financas': {
+                titulo: 'Dashboard de Finanças Corporativas & Fluxo de Caixa',
+                badge: 'Em Construção • Área Financeira',
+                icone: 'fa-coins',
+                desc: 'Painel dedicado à projeção de fluxo de caixa, análise de liquidez, inadimplência, ponto de equilíbrio e indicadores de rentabilidade empresarial.',
+                ativo: false
+            },
+            'estoque': {
+                titulo: 'Dashboard de Gestão de Estoque, Curva ABC & Logística',
+                badge: 'Em Construção • Suprimentos e Operações',
+                icone: 'fa-boxes-stacked',
+                desc: 'Monitoramento de giro de estoque, cobertura de dias, ruptura, classificação estatística Curva ABC e eficiência de compras.',
+                ativo: false
+            },
+            'educacao': {
+                titulo: 'Dashboard de Indicadores Educacionais & Desempenho Escolar',
+                badge: 'Em Construção • Área Educacional',
+                icone: 'fa-graduation-cap',
+                desc: 'Análise estatística de proficiência, evolução por disciplina, taxas de aprovação, evasão e diagnósticos pedagógicos baseados em evidências.',
+                ativo: false
+            },
+            'esporte': {
+                titulo: 'Dashboard de Análise Esportiva, Desempenho & Scout',
+                badge: 'Em Construção • Estatística Esportiva',
+                icone: 'fa-futbol',
+                desc: 'Avaliação quantitativa de rendimento de atletas e equipes, mapas de eficiência, séries históricas de campeonatos e modelos preditivos.',
+                ativo: false
+            },
+            'agricultura': {
+                titulo: 'Dashboard de Agronegócio, Produtividade & Safra',
+                badge: 'Em Construção • Área Agrícola',
+                icone: 'fa-seedling',
+                desc: 'Análise de produtividade por hectare, acompanhamento climático, custos por talhão e séries temporais de rendimento de safra.',
+                ativo: false
+            },
+            'gestao-publica': {
+                titulo: 'Dashboard de Gestão & Políticas Públicas',
+                badge: 'Em Construção • Setor Público',
+                icone: 'fa-landmark',
+                desc: 'Indicadores territoriais, monitoramento de metas institucionais e diagnósticos estatísticos para apoio à gestão pública.',
+                ativo: false
+            }
+        };
+
+        // Abrir Modal do Portfólio
+        function abrirPortfolioModal(areaKey) {
+            const config = areasConfig[areaKey];
+            if (!config) return;
+
+            // Fechar menus abertos
+            document.getElementById('desktop-portfolio-menu').classList.remove('show');
+            document.getElementById('mobile-menu').classList.add('hidden');
+
+            // Atualizar cabeçalho do modal
+            document.getElementById('modal-title').textContent = config.titulo;
+            document.getElementById('modal-badge').textContent = config.badge;
+            document.getElementById('modal-icon-box').innerHTML = `<i class="fas ${config.icone}"></i>`;
+
+            // Atualizar pills de navegação rápida dentro do modal
+            document.querySelectorAll('.modal-pill').forEach(pill => {
+                if (pill.dataset.area === areaKey) {
+                    pill.className = 'modal-pill px-3 py-1.5 rounded-full font-semibold bg-metrika-navy text-white shrink-0';
+                } else {
+                    pill.className = 'modal-pill px-3 py-1.5 rounded-full font-medium bg-white text-slate-600 hover:bg-slate-200 shrink-0';
+                }
+            });
+
+            // Alternar entre Power BI ativo e tela Em Construção
+            const vendasBox = document.getElementById('modal-content-vendas');
+            const construcaoBox = document.getElementById('modal-content-construcao');
+
+            if (config.ativo) {
+                vendasBox.classList.remove('hidden');
+                construcaoBox.classList.add('hidden');
+            } else {
+                vendasBox.classList.add('hidden');
+                construcaoBox.classList.remove('hidden');
+                document.getElementById('construcao-titulo').textContent = config.titulo;
+                document.getElementById('construcao-desc').textContent = config.desc;
+                document.getElementById('construcao-icon').innerHTML = `<i class="fas ${config.icone}"></i>`;
+            }
+
+            // Exibir modal
+            const modal = document.getElementById('portfolio-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fechar Modal do Portfólio
+        function fecharPortfolioModal() {
+            const modal = document.getElementById('portfolio-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Fechar modal ao clicar no fundo escuro ou pressionar ESC
+        document.getElementById('portfolio-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'portfolio-modal') {
+                fecharPortfolioModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                fecharPortfolioModal();
+            }
+        });
+    </script>
+</body>
+</html>
